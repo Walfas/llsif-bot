@@ -1,0 +1,11 @@
+*.swp
+*.swo
+
+*.jpg
+*.jpeg
+*.png
+
+config.yml
+font
+output
+
