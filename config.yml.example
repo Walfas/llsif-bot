@@ -1,0 +1,25 @@
+---
+general:
+  images_path: img
+  output_path: output/output.jpg
+  phrases_path: phrases.txt
+
+wordnik:
+  url: http://api.wordnik.com/v4/words.json/randomWord
+  params:
+    api_key: your_api_key_here
+    minCorpusCount: 50
+    hasDictionaryDef: false
+    includePartOfSpeech: adjective
+
+imagemagick:
+  width: 426
+  height: 600
+  stroke_color: '484848'
+  font: font/your_font_here.ttf
+
+twitter:
+  consumer_key:        put
+  consumer_secret:     your
+  access_token:        keys
+  access_token_secret: here
