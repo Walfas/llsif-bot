@@ -11,7 +11,7 @@ module LlsifCard
 
   # Pick a random image in the img directory
   def get_random_image_path dir
-    subdir = Dir[dir + '/*'].sample
+    subdir = Dir[dir + '/*/'].sample
     Dir[subdir + '/*.{png,jpg,jpeg,gif}'].sample
   end
 

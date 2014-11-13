@@ -27,7 +27,7 @@ module LlsifTweet
 
   def tweet_card!
     img_path = LlsifCard.get_random_image_path @config['general']['images_path']
-    character_name = img_path.split('/')[-2]
+    #character_name = img_path.split('/')[-2]
 
     out_path = @config['general']['output_path']
     student_name = LlsifCard.generate_card! img_path, out_path
@@ -44,17 +44,23 @@ module LlsifTweet
     end
   end
 
-  def top_tweets n=9, day=DateTime.now.to_date.prev_day
+  SECONDS_IN_HOUR = 3600
+  def top_tweets n=9, hours_ago=24
     tweets = client.user_timeline count: 200, exclude_replies: true
-    tweets_by_day = tweets.select { |t| t.created_at.to_date == day }
-    sorted = tweets_by_day.sort_by { |t| -t.favorite_count-t.retweet_count }
+    tweets_by_time = tweets.select { |t| (Time.now - t.created_at) < SECONDS_IN_HOUR*hours_ago }
+    sorted = tweets_by_time.sort_by { |t| -t.favorite_count-t.retweet_count }
     sorted.take n
   end
 
   def update_profile!
-    tweet = top_tweets(1).first
+    tweet = top_tweets(1, @config['general']['profile_lookback_hours']).first
 
     student_name = tweet.text.match(/- (.* Student)/).captures.first
+
+    # If profile info is the same, don't bother
+    user = client.user skip_status: true
+    return if user.name == student_name
+
     change_display_name student_name if student_name
 
     img_url = tweet.media.first.media_url unless tweet.media.empty?

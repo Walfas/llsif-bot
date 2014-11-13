@@ -3,6 +3,7 @@ general:
   images_path: img
   output_path: output/output.jpg
   phrases_path: phrases.txt
+  profile_lookback_hours: 4
 
 wordnik:
   url: http://api.wordnik.com/v4/words.json/randomWord
