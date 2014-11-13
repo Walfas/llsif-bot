@@ -12,7 +12,7 @@ module LlsifTweet
   def client
     return @client if @client
 
-    c = @config['twitter']
+    c = @config['twitter']['api']
     @client = Twitter::REST::Client.new do |config|
       config.consumer_key = c['consumer_key']
       config.consumer_secret = c['consumer_secret']
@@ -75,6 +75,22 @@ module LlsifTweet
 
   def change_display_name name
     client.update_profile name: name[0...20] # Name can have a max length of 20
+  end
+
+  def get_files tweets
+    tweets.flat_map { |t| open(t.media.first.media_url.to_s) unless t.media.empty?}
+  end
+
+  def to_html tweets
+    text = tweets.map.with_index do |t, index|
+      total = t.favorite_count + t.retweet_count
+      count = "<strong>#{total}</strong>"
+      count_details =  "#{t.retweet_count} RTs + #{t.favorite_count} Favs"
+
+      "<p>#{index+1}. #{t.text}</p>\n<blockquote>Bond: #{count} (#{count_details})</blockquote>"
+    end.join("\n")
+
+    text
   end
 end
 

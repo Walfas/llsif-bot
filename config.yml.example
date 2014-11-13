@@ -20,7 +20,18 @@ imagemagick:
   font: font/your_font_here.ttf
 
 twitter:
-  consumer_key:        put
-  consumer_secret:     your
-  access_token:        keys
-  access_token_secret: here
+  api:
+    consumer_key:        put
+    consumer_secret:     your
+    access_token:        keys
+    access_token_secret: here
+
+tumblr:
+  host: your-url-here.tumblr.com
+  tags: 'llsif,love live'
+  api:
+    consumer_key:       put
+    consumer_secret:    your
+    oauth_token:        keys
+    oauth_token_secret: here
+
