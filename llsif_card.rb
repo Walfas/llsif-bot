@@ -73,5 +73,15 @@ module LlsifCard
 
     student_name
   end
+
+  # Not used because apparently you can't change theme color with Twitter API
+  def get_color! file
+    img = MiniMagick::Image.read file
+
+    img.resize '1x1'
+    srgb_str = img['%[pixel:u]'] # srgb(111,222,333)
+    rgb_arr = srgb_str[/\d+,\d+,\d+/].split(',').map(&:to_i)
+    '%02x'*3 % rgb_arr
+  end
 end
 
