@@ -44,16 +44,24 @@ module LlsifTweet
     end
   end
 
-  SECONDS_IN_HOUR = 3600
-  def top_tweets n=9, hours_ago=24
+  SECONDS_PER_HOUR = 3600
+  def top_tweets n=9, start_time, end_time
     tweets = client.user_timeline count: 200, exclude_replies: true
-    tweets_by_time = tweets.select { |t| (Time.now - t.created_at) < SECONDS_IN_HOUR*hours_ago }
+    tweets_by_time = tweets.select do |t|
+      tweet_time = t.created_at.to_time
+      start_time < tweet_time && tweet_time < end_time
+    end
+
     sorted = tweets_by_time.sort_by { |t| -t.favorite_count-t.retweet_count }
     sorted.take n
   end
 
   def update_profile!
-    tweet = top_tweets(1, @config['general']['profile_lookback_hours']).first
+    hours_ago = @config['general']['profile_lookback_hours']
+    start_date = Time.now - SECONDS_PER_HOUR*hours_ago
+    end_date = Time.now
+
+    tweet = top_tweets(1, start_date, end_date).first
 
     student_name = tweet.text.match(/- (.* Student)/).captures.first
 
