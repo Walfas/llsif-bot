@@ -58,10 +58,10 @@ module LlsifTweet
 
   def update_profile!
     hours_ago = @config['general']['profile_lookback_hours']
-    start_date = Time.now - SECONDS_PER_HOUR*hours_ago
-    end_date = Time.now
+    start_time= Time.now - SECONDS_PER_HOUR*hours_ago
+    end_time = Time.now
 
-    tweet = top_tweets(1, start_date, end_date).first
+    tweet = top_tweets(1, start_time, end_time).first
 
     student_name = tweet.text.match(/- (.* Student)/).captures.first
 
