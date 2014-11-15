@@ -62,8 +62,9 @@ module LlsifCard
     img = MiniMagick::Image.open input_path
 
     adjective = get_random_word @config['wordnik']['url'], @config['wordnik']['params']
+    adjective[0] = adjective[0].upcase
     noun = 'Student'
-    student_name = "#{adjective.capitalize} #{noun}"
+    student_name = "#{adjective} #{noun}"
 
     overlay_text img, student_name.upcase, @config['imagemagick']
 
