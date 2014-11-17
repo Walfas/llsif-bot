@@ -41,7 +41,7 @@ module LlsifCard
   # Check list of used words to avoid reusing a word twice
   def is_used word
     File.foreach @config['general']['used_words_path'] do |line|
-      return true if line.chomp == word
+      return true if line.chomp.downcase == word
     end
 
     false
@@ -88,7 +88,7 @@ module LlsifCard
     adjective = get_random_word @config['wordnik']['url'], @config['wordnik']['params']
 
     # Record that this word has been used
-    File.open(@config['general']['used_words_path'], 'a') { |f| f.write "#{adjective}\n" }
+    File.open(@config['general']['used_words_path'], 'a') { |f| f.write "#{adjective.downcase}\n" }
 
     adjective[0] = adjective[0].upcase
     noun = 'Student'
