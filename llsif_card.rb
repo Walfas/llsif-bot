@@ -15,12 +15,36 @@ module LlsifCard
     Dir[subdir + '/*.{png,jpg,jpeg,gif}'].sample
   end
 
-  def get_random_word url, params
+  # Call Wordnik API, return an array of words (strings)
+  def get_random_words url, params
     uri = URI.parse url
     uri.query = URI.encode_www_form params
     body = Net::HTTP.get uri
     json = JSON.parse body
-    json['word']
+    words = json.map { |x| x['word'] }
+  end
+
+  # Get a single random word that has not already been used
+  # (Possibly does multiple wordnik API calls)
+  def get_random_word url, params
+    @config['wordnik']['max_attempts'].times do
+      words = get_random_words url, params
+
+      word = words.detect { |w| !is_used(w) } # Get first unused word
+
+      return word if !word.nil?
+    end
+
+    fail 'Exceeded max wordnik API attempts'
+  end
+
+  # Check list of used words to avoid reusing a word twice
+  def is_used word
+    File.foreach @config['general']['used_words_path'] do |line|
+      return true if line.chomp == word
+    end
+
+    false
   end
 
   def overlay_text img, text, options
@@ -62,6 +86,10 @@ module LlsifCard
     img = MiniMagick::Image.open input_path
 
     adjective = get_random_word @config['wordnik']['url'], @config['wordnik']['params']
+
+    # Record that this word has been used
+    File.open(@config['general']['used_words_path'], 'a') { |f| f.write "#{adjective}\n" }
+
     adjective[0] = adjective[0].upcase
     noun = 'Student'
     student_name = "#{adjective} #{noun}"

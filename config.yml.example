@@ -2,11 +2,13 @@
 general:
   images_path: img
   output_path: output/output.jpg
+  used_words_path: output/used_words.txt
   phrases_path: phrases.txt
   profile_lookback_hours: 4
 
 wordnik:
-  url: http://api.wordnik.com/v4/words.json/randomWord
+  max_attempts: 5
+  url: http://api.wordnik.com/v4/words.json/randomWords
   params:
     api_key: your_api_key_here
     minCorpusCount: 50
@@ -17,7 +19,7 @@ imagemagick:
   width: 426
   height: 600
   stroke_color: '484848'
-  font: font/your_font_here.ttf
+  font: font/your_font_here.ttf   # I use 'Roboto-BoldCondensed.ttf'
 
 twitter:
   api:
