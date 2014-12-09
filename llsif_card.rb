@@ -22,6 +22,7 @@ module LlsifCard
     body = Net::HTTP.get uri
     json = JSON.parse body
     words = json.map { |x| x['word'] }
+    words.shuffle
   end
 
   # Get a single random word that has not already been used
@@ -41,7 +42,7 @@ module LlsifCard
   # Check list of used words to avoid reusing a word twice
   def is_used word
     File.foreach @config['general']['used_words_path'] do |line|
-      return true if line.chomp.downcase == word
+      return true if line.chomp.downcase == word.downcase
     end
 
     false
